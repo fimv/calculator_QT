@@ -12,7 +12,10 @@ Calculator::Calculator(QWidget* pwgt/*= 0*/) : QWidget(pwgt)
     m_plcd->setSegmentStyle(QLCDNumber::Flat);
     m_plcd->setMinimumSize(150, 50);
 
-    QString bButtons[4] = {"sqrt", "reve", "squa", "CE"};
+    QString bButtons[2][4] = {
+                           {"sqrt", "reve", "squa", "CE"},
+                           {"sqrcub", "sin", "cos", "tan"}
+                              };
 
     QChar aButtons[4][4] = {
                             {'7', '8', '9', '/'},
@@ -26,11 +29,12 @@ Calculator::Calculator(QWidget* pwgt/*= 0*/) : QWidget(pwgt)
     ptopLayout->addWidget(m_plcd, 0, 0, 1, 4);
    // ptopLayout->addWidget(createButton("CE"), 1, 3);
 
-    for (int i = 0; i < 4; ++i) {
-                   ptopLayout->addWidget(createButton(bButtons[i]), 2 , i);
+    for (int i = 0; i < 2; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            ptopLayout->addWidget(createButton(bButtons[i] [j]), i + 1 , j);
             }
 
-
+}
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
            ptopLayout->addWidget(createButton(aButtons[i][j]), i + 3, j);
@@ -43,7 +47,7 @@ Calculator::Calculator(QWidget* pwgt/*= 0*/) : QWidget(pwgt)
 QPushButton* Calculator::createButton(const QString& str)
 {
     QPushButton* pcmd = new QPushButton(str);
-    pcmd->setMinimumSize(60, 60);
+    pcmd->setMinimumSize(80, 60);
     connect(pcmd, SIGNAL(clicked()), SLOT(slotButtonClicked()));
     return pcmd;
 }
@@ -94,6 +98,21 @@ void Calculator::calculate2()
     if (strOperation == "squa") {
         fResult = fOperand1 * fOperand1;
     }
+
+
+    if (strOperation == "sqrcub") {
+        fResult = std::pow(fOperand1, 1.0/3.0) ;
+    }
+
+    if (strOperation == "sin") {
+        fResult = std::sin(fOperand1 * PI / 180);
+    }
+    if (strOperation == "cos") {
+        fResult = std::cos(fOperand1 * PI / 180);
+    }
+    if (strOperation == "tan") {
+        fResult = std::tan(fOperand1 * PI / 180);
+    }
     m_plcd->display(fResult);
 }
 
@@ -119,8 +138,9 @@ void Calculator::slotButtonClicked()
         m_plcd->display(m_strDisplay);
     }
     else {
-     if ((str == "sqrt") || (str == "reve") || (str == "squa")) {
-          // m_strDisplay += str;
+     if ((str == "sqrt") || (str == "reve") || (str == "squa") || (str == "sqrcub")
+             || (str == "sin") || (str == "cos") || (str == "tan")) {
+
           m_stk.push(QString().setNum(m_plcd->value()));
            // m_stk.push(0);
             m_stk.push(str);

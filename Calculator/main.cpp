@@ -9,7 +9,7 @@ int main(int argc, char** argv)
     Calculator   calculator;
 
     calculator.setWindowTitle("Calculator01");
-    calculator.resize(230, 200);
+    calculator.resize(270, 200);
 
     calculator.show(); 
 
